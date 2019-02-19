@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ClimbLog</string>
+
+    <string name="action_done">Done</string>
+    <string name="email_message">Email</string>
+    <string name="password_message">Password</string>
+    <string name="button_login">Login</string>
+    <string name="button_sign_up">Sign Up</string>
+
+    <string name="firstname_message">First</string>
+    <string name="lastname_message">Last</string>
+</resources>

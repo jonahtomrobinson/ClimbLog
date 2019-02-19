@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "305006541956",
+    "firebase_url": "https://climblog-53a41.firebaseio.com",
+    "project_id": "climblog-53a41",
+    "storage_bucket": "climblog-53a41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:305006541956:android:47dabaedfad03a75",
+        "android_client_info": {
+          "package_name": "com.example.climblog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "305006541956-21c996b07s9jcnbpfb9hoo4jiiem0dtp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.climblog",
+            "certificate_hash": "ad28fe7fc484b94176978719f25a7476967ae467"
+          }
+        },
+        {
+          "client_id": "305006541956-g3hl5d2aco807uhjos8ivsf75ncg8gd8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfoLm6ykHEpmuNp_JR0L_LGj0OV07ladM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "305006541956-g3hl5d2aco807uhjos8ivsf75ncg8gd8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
