@@ -9,4 +9,5 @@
 
     <string name="firstname_message">First</string>
     <string name="lastname_message">Last</string>
+    <string name="title_activity_success">Success</string>
 </resources>
