@@ -38,7 +38,11 @@ class MainActivity : AppCompatActivity() {
 
     /** Called when the user taps the Login button */
     fun loginClick(view: View) {
-        firebaseLogin(view, input_email.text.toString(), input_password.text.toString())
+        //firebaseLogin(view, input_email.text.toString(), input_password.text.toString())
+
+        var intent = Intent(this, TestActivity::class.java)
+        //intent.putExtra("id", fbAuth.currentUser?.email)
+        startActivity(intent)
     }
 
     /** Test account: test@email.com , password123*/
@@ -47,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         fbAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, OnCompleteListener<AuthResult> { task ->
 
             if(task.isSuccessful){
-                var intent = Intent(this, SuccessActivity::class.java)
+                var intent = Intent(this, TestActivity::class.java)
                 //intent.putExtra("id", fbAuth.currentUser?.email)
                 startActivity(intent)
 
