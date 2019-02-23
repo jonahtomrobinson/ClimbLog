@@ -2,19 +2,32 @@ package com.example.climblog
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.app.FragmentPagerAdapter
 
-class PagerAdapter(fragmentManager: FragmentManager): FragmentStatePagerAdapter(fragmentManager) {
+class PageAdapter internal constructor(fragmentManager: FragmentManager): FragmentPagerAdapter(fragmentManager) {
 
-    var mNumOfTabs: Int = 0
-
+    private val mFragmentList = ArrayList<Fragment>()
+    private val mFragmentTitleList = ArrayList<String>()
 
     override fun getItem(position: Int): Fragment {
-        return BlankFragment.newInstance()
+        return mFragmentList[position]
+    }
+
+    fun addFragment(fragment: Fragment, title: String, pos: Int) {
+        mFragmentList.add(fragment)
+        mFragmentTitleList.add(title)
+    }
+
+    override fun getPageTitle(position: Int): CharSequence? {
+        return mFragmentTitleList[position]
+    }
+
+    fun getPosition(title: CharSequence?): Int {
+        return mFragmentTitleList.indexOf(title)
     }
 
     override  fun getCount(): Int {
-        return 1
+        return mFragmentList.size
     }
 
 }

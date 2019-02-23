@@ -10,15 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".TestActivity"
+            android:name=".NavigationActivity"
             android:label="@string/title_activity_test">
-        </activity>
-        <activity android:name=".SuccessActivity">
-        </activity>
-        <activity
-            android:name=".Success"
-            android:label="@string/title_activity_success"
-            android:theme="@style/NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".NavigationActivity"/>
         </activity>
         <activity
             android:name=".SignUpActivity"

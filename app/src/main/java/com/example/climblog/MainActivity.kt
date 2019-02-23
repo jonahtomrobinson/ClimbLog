@@ -3,17 +3,12 @@ package com.example.climblog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.ContextCompat.startActivity
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     fun loginClick(view: View) {
         //firebaseLogin(view, input_email.text.toString(), input_password.text.toString())
 
-        var intent = Intent(this, TestActivity::class.java)
+        var intent = Intent(this, NavigationActivity::class.java)
         //intent.putExtra("id", fbAuth.currentUser?.email)
         startActivity(intent)
     }
@@ -51,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         fbAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, OnCompleteListener<AuthResult> { task ->
 
             if(task.isSuccessful){
-                var intent = Intent(this, TestActivity::class.java)
+                var intent = Intent(this, NavigationActivity::class.java)
                 //intent.putExtra("id", fbAuth.currentUser?.email)
                 startActivity(intent)
 
