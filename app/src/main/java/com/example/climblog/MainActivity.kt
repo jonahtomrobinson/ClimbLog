@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         val message = intent.getStringExtra(EXTRA_SIGNUP_EMAIL)
 
-        val emailText = findViewById<TextView>(R.id.input_email).apply{
+        findViewById<TextView>(R.id.input_email).apply{
             text = message
         }
     }

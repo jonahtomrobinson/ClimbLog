@@ -22,10 +22,10 @@ class NavigationActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.my_toolbar))
 
         /** Initialise navigation bar */
-        pageAdapter.addFragment(IndoorFragment.newInstance(),resources.getString(R.string.title_indoor),0)
-        pageAdapter.addFragment(OutdoorFragment.newInstance(),resources.getString(R.string.title_outdoor),1)
-        pageAdapter.addFragment(HistoryFragment.newInstance(),resources.getString(R.string.title_history),2)
-        pageAdapter.addFragment(ProfileFragment.newInstance(),resources.getString(R.string.title_profile),3)
+        pageAdapter.addFragment(IndoorFragment.newInstance(),resources.getString(R.string.title_indoor))
+        pageAdapter.addFragment(OutdoorFragment.newInstance(),resources.getString(R.string.title_outdoor))
+        pageAdapter.addFragment(HistoryFragment.newInstance(),resources.getString(R.string.title_history))
+        pageAdapter.addFragment(ProfileFragment.newInstance(),resources.getString(R.string.title_profile))
         view_pager.adapter = pageAdapter
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         findViewById<BottomNavigationView>(R.id.navigation).selectedItemId = R.id.navigation_indoor

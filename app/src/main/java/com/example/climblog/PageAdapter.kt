@@ -13,7 +13,7 @@ class PageAdapter internal constructor(fragmentManager: FragmentManager): Fragme
         return mFragmentList[position]
     }
 
-    fun addFragment(fragment: Fragment, title: String, pos: Int) {
+    fun addFragment(fragment: Fragment, title: String) {
         mFragmentList.add(fragment)
         mFragmentTitleList.add(title)
     }
