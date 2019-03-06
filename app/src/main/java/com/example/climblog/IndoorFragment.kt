@@ -1,9 +1,11 @@
 package com.example.climblog
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -29,6 +31,93 @@ class IndoorFragment : Fragment() {
         fun newInstance(): IndoorFragment {
             return IndoorFragment()
         }
+
+        fun addLocData(location: Location, filePath: String){
+            val json = JSONObject()
+            val file = readFile((filePath))
+
+            val locations = JSONObject(file).getJSONArray("location")
+            locations.put(locToJsonObj(location))
+            json.put("location", locations)
+
+            saveJSON(json.toString(), filePath)
+        }
+
+        private fun locToJsonObj(location: Location): JSONObject {
+            return JSONObject()
+                .put("name", location.name)
+                .put("address", location.address)
+                .put("lastVisited", location.lastVisited)
+                .put("favourite", location.favourite)
+                .put("inOrOut", location.inOrOut)
+        }
+
+        private fun jsonObjToLoc(jsonObject: JSONObject): Location {
+            return Location(
+                jsonObject.getString("name"),
+                jsonObject.getString("address"),
+                jsonObject.getString("lastVisited"),
+                jsonObject.getBoolean("favourite"),
+                jsonObject.getString("inOrOut")
+            )
+        }
+
+        fun readFile(filePath: String): String {
+            try {
+                val stream = FileInputStream(filePath)
+
+                var jsonString = ""
+                stream.use { stream ->
+                    val fileChannel = stream.channel
+                    val mappedByteBuffer = fileChannel.map(
+                        FileChannel.MapMode.READ_ONLY,
+                        0,
+                        fileChannel.size()
+                    )
+                    jsonString = Charset.defaultCharset().decode(mappedByteBuffer).toString()
+                }
+                return jsonString
+            } catch (e: Exception) {
+                return ""
+            }
+        }
+
+        fun saveJSON(jsonString: String, filePath: String) {
+            val output: Writer
+            val file: File? = File(filePath)
+            if (file != null) {
+                output = BufferedWriter(FileWriter(file))
+                output.write(jsonString)
+                output.close()
+            }
+        }
+
+        fun getLocationFilePath(context: Context) : String {
+            val fileName = "Locations.json"
+            val storageDir = context.filesDir
+            val filePath = storageDir.absolutePath + "/" + fileName
+            val file = File(filePath)
+            if(!file .exists()){
+                val json = JSONObject()
+                json.put("location", JSONArray())
+                saveJSON(json.toString(), filePath)
+            }
+            return filePath
+        }
+
+        fun parseJSON(filePath: String, name: String) : ArrayList<Any> {
+            val file = readFile(filePath)
+            val arrayList = ArrayList<Any>()
+
+            if (file != "") {
+                val jsonObject = JSONObject(readFile(filePath))
+                for (i in 0 .. (jsonObject.getJSONArray(name).length() - 1)){
+                    arrayList.add( jsonObjToLoc(jsonObject.getJSONArray(name).getJSONObject(i)))
+                }
+            }
+
+            return arrayList
+        }
     }
 
     val locations: ArrayList<Location> = ArrayList()
@@ -41,13 +130,10 @@ class IndoorFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         locations.clear()
 
-        //addLocData()
-        //addJsonData(Location("A new test", "a", "2018", true))
-
         // Loads locations into the ArrayList
 
-        val locationArray = parseJSON(getLocationFilePath(), "location")
-        if (locationArray[0] is Location){
+        val locationArray = parseJSON(getLocationFilePath(context!!), "location")
+        if (!locationArray.isEmpty() && locationArray[0] is Location){
             addLocations(locationArray as ArrayList<Location>)
         }
 
@@ -55,6 +141,12 @@ class IndoorFragment : Fragment() {
         rv_location_list.layoutManager = LinearLayoutManager(activity!!.applicationContext)
         // Access the RecyclerView Adapter and load the data into it
         rv_location_list.adapter = LocationAdapter(locations, context!!)
+
+        float_add_location.setOnClickListener { view ->
+            val intent = Intent(activity, AddLocationActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
     override fun onDetach() {
@@ -64,21 +156,27 @@ class IndoorFragment : Fragment() {
 
     private fun addLocations(parsedData: ArrayList<Location>?) {
         if (parsedData != null) {
-            for (Location in parsedData) {
-                locations.add(Location)
+
+            var sortedParsedData= parsedData.sortedWith(compareBy{it.name})
+            sortedParsedData = sortedParsedData.sortedWith(compareByDescending {it.favourite})
+
+            for (Location in sortedParsedData) {
+                if (Location.inOrOut == "indoor"){
+                    locations.add(Location)
+                }
             }
         }
     }
 
-    private fun addLocData(location: Location){
+    private fun addLocData(location: Location, filePath: String){
         val json = JSONObject()
-        val file = readFile(getLocationFilePath())
+        val file = readFile((filePath))
 
         val locations = JSONObject(file).getJSONArray("location")
         locations.put(locToJsonObj(location))
         json.put("location", locations)
 
-        saveJSON(json.toString(), getLocationFilePath())
+        saveJSON(json.toString(), filePath)
     }
 
     /*private fun createJsonData() {
@@ -93,72 +191,5 @@ class IndoorFragment : Fragment() {
 
         saveJSON(json.toString())
     }*/
-
-    private fun saveJSON(jsonString: String, filePath: String) {
-        val output: Writer
-        val file: File? = File(filePath)
-        if (file != null) {
-            output = BufferedWriter(FileWriter(file))
-            output.write(jsonString)
-            output.close()
-        }
-    }
-
-    private fun parseJSON(filePath: String, name: String) : ArrayList<Any> {
-        val file = readFile(filePath)
-        val arrayList = ArrayList<Any>()
-
-        if (file != "") {
-            val jsonObject = JSONObject(readFile(filePath))
-            for (i in 0 .. (jsonObject.getJSONArray(name).length() - 1)){
-                arrayList.add( jsonObjToLoc(jsonObject.getJSONArray(name).getJSONObject(i)))
-            }
-        }
-
-        return arrayList
-    }
-
-    private fun readFile(filePath: String): String {
-        try {
-            val stream = FileInputStream(filePath)
-
-            var jsonString = ""
-            stream.use { stream ->
-                val fileChannel = stream.channel
-                val mappedByteBuffer = fileChannel.map(
-                    FileChannel.MapMode.READ_ONLY,
-                    0,
-                    fileChannel.size()
-                )
-                jsonString = Charset.defaultCharset().decode(mappedByteBuffer).toString()
-            }
-            return jsonString
-        } catch (e: Exception) {
-            return ""
-        }
-    }
-
-    private fun getLocationFilePath() : String {
-        val fileName = "IndoorLocations.json"
-        val storageDir = context!!.filesDir
-        return storageDir.absolutePath + "/" + fileName
-    }
-
-    private fun locToJsonObj(location: Location): JSONObject {
-        return JSONObject()
-            .put("name", location.name)
-            .put("address", location.address)
-            .put("lastVisited", location.lastVisited)
-            .put("Favourite", location.favourite)
-    }
-
-    private fun jsonObjToLoc(jsonObject: JSONObject): Location {
-        return Location(
-            jsonObject.getString("name"),
-            jsonObject.getString("address"),
-            jsonObject.getString("lastVisited"),
-            jsonObject.getBoolean("Favourite")
-        )
-    }
 
 }

@@ -22,9 +22,15 @@ class LocationAdapter(val items : ArrayList<Location>, val context: Context) : R
 
     // Binds each animal in the ArrayList to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder?.tvLocationName?.text = items[position].name
-        holder?.tvLocationAddress?.text = items[position].address
-        holder?.tvLocationLastVisited?.text = items[position].lastVisited
+        holder.tvLocationName?.text = items[position].name
+        holder.tvLocationAddress?.text = items[position].address
+        holder.tvLocationLastVisited?.text = "Last Visited\n" + items[position].lastVisited
+        if (items[position].favourite) {
+            holder.tvLocationFavourite?.setImageResource(R.drawable.ic_star_filled)
+        }
+        else{
+            holder.tvLocationFavourite?.setImageResource(R.drawable.ic_star_clear)
+        }
     }
 }
 
@@ -33,4 +39,5 @@ class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     val tvLocationName = view.tv_location_name
     val tvLocationAddress = view.tv_location_address
     val tvLocationLastVisited = view.tv_location_last_visited
+    val tvLocationFavourite = view.tv_location_favourite
 }

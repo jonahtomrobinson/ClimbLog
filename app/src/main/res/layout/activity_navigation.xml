@@ -18,7 +18,8 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" tools:title="@string/title_activity_test"
-        app:titleTextColor="@color/colorOrange"/>
+        app:titleTextColor="@color/colorOrange"
+        app:fontFamily="@font/ubuntu"/>
 
     <TextView
         android:id="@+id/message"

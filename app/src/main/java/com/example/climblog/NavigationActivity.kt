@@ -5,6 +5,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_navigation.*
 
+
 class NavigationActivity : AppCompatActivity() {
 
     private val pageAdapter = PageAdapter(supportFragmentManager)
@@ -13,6 +14,8 @@ class NavigationActivity : AppCompatActivity() {
         message.text = item.title
         supportActionBar?.title = item.title
         view_pager.currentItem = pageAdapter.getPosition(item.title)
+
+
         return@OnNavigationItemSelectedListener true
     }
 
@@ -20,6 +23,12 @@ class NavigationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_navigation)
         setSupportActionBar(findViewById(R.id.my_toolbar))
+
+        val message = intent.getStringArrayListExtra(EXTRA_NAV_ARRAY)
+        if (message != null){
+            IndoorFragment.addLocData(Location( message[1], message[2], message[3], message[4].toBoolean(), message[5]),IndoorFragment.getLocationFilePath(applicationContext))
+            intent.removeExtra(EXTRA_NAV_ARRAY)
+        }
 
         /** Initialise navigation bar */
         pageAdapter.addFragment(IndoorFragment.newInstance(),resources.getString(R.string.title_indoor))

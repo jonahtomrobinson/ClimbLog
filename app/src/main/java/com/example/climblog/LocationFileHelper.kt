@@ -11,6 +11,13 @@ import java.nio.charset.Charset
  */
 class LocationFileHelper {
 
+    companion object {
+        fun newInstance(): LocationFileHelper {
+            return LocationFileHelper()
+        }
 
+
+
+    }
 
 }
