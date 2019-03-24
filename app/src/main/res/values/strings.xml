@@ -9,4 +9,17 @@
 
     <string name="firstname_message">First</string>
     <string name="lastname_message">Last</string>
+    <string name="title_activity_success">Success</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="title_indoor">Indoor</string>
+    <string name="title_outdoor">Outdoor</string>
+    <string name="title_history">History</string>
+    <string name="title_profile">Profile</string>
+
+    <string name="last_visited">Last Visited\n</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
 </resources>
