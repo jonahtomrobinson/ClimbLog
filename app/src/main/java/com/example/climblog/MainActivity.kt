@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,11 +35,13 @@ class MainActivity : AppCompatActivity() {
 
     /** Called when the user taps the Login button */
     fun loginClick(view: View) {
-        //firebaseLogin(view, input_email.text.toString(), input_password.text.toString())
+        if(input_email.text.toString()!=null){
+            //firebaseLogin(view, input_email.text.toString(), input_password.text.toString())
 
-        var intent = Intent(this, NavigationActivity::class.java)
-        //intent.putExtra("id", fbAuth.currentUser?.email)
-        startActivity(intent)
+            var intent = Intent(this, NavigationActivity::class.java)
+            //intent.putExtra("id", fbAuth.currentUser?.email)
+            startActivity(intent)
+        }
     }
 
     /** Test account: test@email.com , password123*/

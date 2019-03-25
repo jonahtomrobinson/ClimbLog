@@ -8,4 +8,4 @@ import java.util.*
  * Created by Jonah Robinson on 24/02/2019.
  */
 
-data class Location(val name: String, val address: String, val lastVisited: String, val favourite: Boolean, val inOrOut: String)
+data class Location(var name: String, var address: String, var lastVisited: String, var favourite: Boolean, var inOrOut: String)

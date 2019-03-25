@@ -3,34 +3,27 @@ package com.example.climblog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.design.widget.Snackbar
-import android.text.Layout
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_add_location.*
-import kotlinx.android.synthetic.main.activity_navigation.*
-import kotlinx.android.synthetic.main.activity_navigation.view.*
 
 const val EXTRA_NAV_ARRAY = "come.example.climblog.NAV_ARRAY"
 
 class AddLocationActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_location)
 
+        /** Set the custom actionbar and title.*/
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.title = "Add Location"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        Log.d("BAD", "created")
     }
 
     /** Inflate menu_actionbar for the action bar.*/
@@ -40,12 +33,15 @@ class AddLocationActivity : AppCompatActivity() {
         return true
     }
 
+    /** On confirm creation of a new location.*/
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_done -> {
+
+            /** Using locationName grab the stored Locations JSON as an array.*/
             val locationName = input_location_name.text.toString()
+            val storedLocations = FileHelper.parseJSON(FileHelper.getLocationFilePath(this), "location") as ArrayList<Location>
 
-            val storedLocations = IndoorFragment.parseJSON(IndoorFragment.getLocationFilePath(this), "location") as ArrayList<Location>
-
+            /** Testing whether the name is duplicated.*/
             var duplicateName = false
             for (location in storedLocations){
                 if (location.name == locationName){
@@ -53,6 +49,7 @@ class AddLocationActivity : AppCompatActivity() {
                 }
             }
 
+            /** If duplicated alert user, otherwise add location.*/
             if (duplicateName){
                 Toast.makeText(this, "Duplicate location name entered.", Toast.LENGTH_LONG).show()
             }
@@ -93,8 +90,7 @@ class AddLocationActivity : AppCompatActivity() {
         }
     }
 
-
-
+    /** Selectable star button allows the user to favourite locations and un-favourite*/
     fun onRadioButtonClicked(view: View) {
         if (view is RadioButton) {
             // Is the button now checked?
