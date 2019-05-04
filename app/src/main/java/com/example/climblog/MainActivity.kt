@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         val message = intent.getStringExtra(EXTRA_SIGNUP_EMAIL)
 
-        findViewById<TextView>(R.id.input_email).apply{
+        findViewById<TextView>(R.id.input_email).apply {
             text = message
         }
     }
@@ -34,35 +35,40 @@ class MainActivity : AppCompatActivity() {
 
     /** Called when the user taps the Login button */
     fun loginClick(view: View) {
-        //firebaseLogin(view, input_email.text.toString(), input_password.text.toString())
+        if (input_email.text.toString() != "" && input_password.text.toString() != "") {
+            firebaseLogin(view, input_email.text.toString(), input_password.text.toString())
+        }
+    }
 
-        var intent = Intent(this, NavigationActivity::class.java)
-        //intent.putExtra("id", fbAuth.currentUser?.email)
-        startActivity(intent)
+    fun noAccountClick(view: View) {
+        startActivity(Intent(this, NavigationActivity::class.java))
     }
 
     /** Test account: test@email.com , password123*/
-    private fun firebaseLogin(view: View,email: String, password: String){
+    private fun firebaseLogin(view: View, email: String, password: String) {
         showMessage("Authenticating...")
-        fbAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, OnCompleteListener<AuthResult> { task ->
+        fbAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this, OnCompleteListener<AuthResult> { task ->
 
-            if(task.isSuccessful){
-                var intent = Intent(this, NavigationActivity::class.java)
-                //intent.putExtra("id", fbAuth.currentUser?.email)
-                startActivity(intent)
+                if (task.isSuccessful) {
+                    var intent = Intent(this, NavigationActivity::class.java)
+                    intent.putExtra("id", fbAuth.currentUser?.email)
+                    startActivity(intent)
 
-            }else{
-                showMessage("Authentication failed.")
-            }
-        })
+                } else {
+                    showMessage("Authentication failed.")
+                }
+            })
 
     }
 
     // TODO null email/pass casuses crash, fix.
 
-    private fun showMessage (message: String) {
-        Toast.makeText(this, message,
-            Toast.LENGTH_SHORT).show()
+    private fun showMessage(message: String) {
+        Toast.makeText(
+            this, message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     /*fun showMessage(view:View, message: String){
