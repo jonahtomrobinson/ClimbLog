@@ -116,6 +116,15 @@ class FileHelper {
                     .put("colour", obj.colour)
                     .put("identifier", obj.identifier)
                     .put("date", obj.date)
+                    .put("routes",obj.routes)
+            }
+            else if (obj is Completed){
+                return JSONObject()
+                    .put("id", obj.id)
+                    .put("setId", obj.setId)
+                    .put("routeNum", obj.routeNum)
+                    .put("date", obj.date)
+                    .put("tries",obj.tries)
             }
 
             return null
@@ -139,7 +148,17 @@ class FileHelper {
                     jsonObject.getString("difficulty"),
                     jsonObject.getString("colour"),
                     jsonObject.getString("identifier"),
-                    jsonObject.getString("date")
+                    jsonObject.getString("date"),
+                    jsonObject.getInt("routes")
+                )
+            }
+            else if (type == "completed"){
+                return Completed(
+                    jsonObject.getInt("id"),
+                    jsonObject.getInt("setId"),
+                    jsonObject.getInt("routeNum"),
+                    jsonObject.getString("date"),
+                    jsonObject.getString("tries")
                 )
             }
 
@@ -205,6 +224,19 @@ class FileHelper {
             return filePath
         }
 
+        fun getCompletedFilePath(context: Context) : String {
+            val fileName = "Completed.json"
+            val storageDir = context.filesDir
+            val filePath = storageDir.absolutePath + "/" + fileName
+            val file = File(filePath)
+            if(!file .exists()){
+                val json = JSONObject()
+                json.put("completed", JSONArray())
+                saveJSON(json.toString(), filePath)
+            }
+            return filePath
+        }
+
         /** Parses a JSON file and returns an ArrayList containing the values.*/
         fun parseJSON(filePath: String, name: String) : ArrayList<Any> {
             val file = readFile(filePath)
@@ -220,14 +252,31 @@ class FileHelper {
             return arrayList
         }
 
+        /** Find the next "ID"/counter value for the JSON file.*/
         fun nextId(filePath: String, name: String): Int{
-            val array = FileHelper.parseJSON(filePath, name) as ArrayList<Set>
-            var largestId = 0
-            for (item in array){
-                if (item.id > largestId)
-                    largestId = item.id
+
+            when (name) {
+                "set" -> {
+                    val array = parseJSON(filePath, name) as ArrayList<Set>
+                    var largestId = 0
+                    for (item in array){
+                        if (item.id > largestId)
+                            largestId = item.id
+                    }
+                    return largestId + 1
+                }
+                "completed" -> {
+                    val array = FileHelper.parseJSON(filePath, name) as ArrayList<Completed>
+                    var largestId = 0
+                    for (item in array){
+                        if (item.id > largestId)
+                            largestId = item.id
+                    }
+                    return largestId + 1
+                }
+                else -> return(0)
             }
-            return largestId + 1
+
         }
 
     }

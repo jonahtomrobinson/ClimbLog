@@ -43,17 +43,23 @@ class LocationAdapter(val items : ArrayList<Location>, val context: Context) : R
             context.startActivity(intent)
         }
 
+        val updateMap: MutableMap<String, String> = mutableMapOf()
+
         /** On click of the favourite star, update the JSON data accordingly.*/
         holder.tvLocationFavourite.setOnClickListener{
-            val updateMap: MutableMap<String, String> = mutableMapOf()
             if (items[position].favourite){
                 updateMap.put("favourite","false")
+                holder.tvLocationFavourite?.setImageResource(R.drawable.ic_star_clear)
+                items[position].favourite = false
             }
             else{
                 updateMap.put("favourite","true")
+                holder.tvLocationFavourite?.setImageResource(R.drawable.ic_star_filled)
+                items[position].favourite = true
             }
-            FileHelper.updateData(items[position].name,FileHelper.getLocationFilePath(context),"location",updateMap)
-            Toast.makeText(context, "Test", Toast.LENGTH_SHORT).show()
+            FileHelper.updateData(items[position].name,FileHelper.getLocationFilePath(context),"location", updateMap)
+            //Toast.makeText(context, updateMap.get("favourite"), Toast.LENGTH_SHORT).show()
+            updateMap.clear()
         }
 
     }

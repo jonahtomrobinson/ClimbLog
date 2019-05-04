@@ -7,24 +7,40 @@
         android:layout_height="match_parent"
         tools:context=".LocationDetailsActivity">
 
-
-    <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_location_name"
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@color/colorDark"
+            android:textColor="@color/colorOrange"
+            android:fontFamily="@font/ubuntu"
+            android:elevation="4dp"
+            android:theme="@style/AppTheme"
+            app:popupTheme="@style/AppTheme"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="315dp" app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+    />
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_set_list"
             android:layout_width="0dp"
-            android:layout_height="550dp"
+            android:layout_height="601dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
             app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginTop="48dp" android:layout_marginBottom="48dp"
+            android:layout_marginTop="48dp"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/float_add_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_plus_solid"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_set_list"
+            android:layout_marginEnd="30dp" android:layout_marginBottom="30dp"
+            app:layout_constraintEnd_toEndOf="parent" app:backgroundTint="@color/colorOrange"/>
 
 </android.support.constraint.ConstraintLayout>

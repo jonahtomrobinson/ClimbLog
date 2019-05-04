@@ -16,7 +16,6 @@ class NavigationActivity : AppCompatActivity() {
         supportActionBar?.title = item.title
         view_pager.currentItem = pageAdapter.getPosition(item.title)
 
-
         return@OnNavigationItemSelectedListener true
     }
 
@@ -31,6 +30,7 @@ class NavigationActivity : AppCompatActivity() {
             FileHelper.addData(Location( message[1], message[2], message[3], message[4].toBoolean(), message[5]),"location",FileHelper.getLocationFilePath(applicationContext))
             intent.removeExtra(EXTRA_NAV_ARRAY)
             Toast.makeText(this.applicationContext, "New location added.", Toast.LENGTH_SHORT).show()
+
         }
 
         /** Initialise navigation bar */

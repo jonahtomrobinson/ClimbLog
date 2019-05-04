@@ -36,51 +36,52 @@ class AddLocationActivity : AppCompatActivity() {
     /** On confirm creation of a new location.*/
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_done -> {
-
-            /** Using locationName grab the stored Locations JSON as an array.*/
             val locationName = input_location_name.text.toString()
-            val storedLocations = FileHelper.parseJSON(FileHelper.getLocationFilePath(this), "location") as ArrayList<Location>
+            if (locationName != "") {
 
-            /** Testing whether the name is duplicated.*/
-            var duplicateName = false
-            for (location in storedLocations){
-                if (location.name == locationName){
-                    duplicateName = true
-                }
-            }
+                /** Using locationName grab the stored Locations JSON as an array.*/
+                val storedLocations =
+                    FileHelper.parseJSON(FileHelper.getLocationFilePath(this), "location") as ArrayList<Location>
 
-            /** If duplicated alert user, otherwise add location.*/
-            if (duplicateName){
-                Toast.makeText(this, "Duplicate location name entered.", Toast.LENGTH_LONG).show()
-            }
-            else {
-                val message = ArrayList<String>()
-                message.add("indoor")
-                message.add(locationName)
-                message.add(input_location_address.text.toString())
-                message.add("")
-
-                if (switch_favourite.isChecked){
-                    message.add("true")
-                }
-                else{
-                    message.add("false")
+                /** Testing whether the name is duplicated.*/
+                var duplicateName = false
+                for (location in storedLocations) {
+                    if (location.name == locationName) {
+                        duplicateName = true
+                    }
                 }
 
-                if (inOutRadioGroup.checkedRadioButtonId == radio_indoor.id){
+                /** If duplicated alert user, otherwise add location.*/
+                if (duplicateName) {
+                    Toast.makeText(this, "Duplicate location name entered.", Toast.LENGTH_LONG).show()
+                } else {
+                    val message = ArrayList<String>()
                     message.add("indoor")
-                }
-                else if (inOutRadioGroup.checkedRadioButtonId == radio_outdoor.id){
-                    message.add("outdoor")
-                }
+                    message.add(locationName)
+                    message.add(input_location_address.text.toString())
+                    message.add("")
 
-                val intent = Intent(this, NavigationActivity::class.java).apply {
-                    putExtra(EXTRA_NAV_ARRAY, message)
+                    if (switch_favourite.isChecked) {
+                        message.add("true")
+                    } else {
+                        message.add("false")
+                    }
+
+                    if (inOutRadioGroup.checkedRadioButtonId == radio_indoor.id) {
+                        message.add("indoor")
+                    } else if (inOutRadioGroup.checkedRadioButtonId == radio_outdoor.id) {
+                        message.add("outdoor")
+                    }
+
+                    val intent = Intent(this, NavigationActivity::class.java).apply {
+                        putExtra(EXTRA_NAV_ARRAY, message)
+                    }
+                    startActivity(intent)
+                    //finish()
                 }
-                startActivity(intent)
-                //finish()
             }
             true
+
         }
 
         else -> {

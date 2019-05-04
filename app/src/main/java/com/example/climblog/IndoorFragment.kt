@@ -40,7 +40,7 @@ class IndoorFragment : Fragment() {
         /** Access the RecyclerView Adapter and loads the local locations array data into it.*/
         rv_location_list.adapter = LocationAdapter(locations, context!!)
 
-        /** Listener for addLocations button.*/
+        /** Listener for addLocation floating button.*/
         float_add_location.setOnClickListener { view ->
             val intent = Intent(activity, AddLocationActivity::class.java)
             startActivity(intent)

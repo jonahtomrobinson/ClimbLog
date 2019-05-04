@@ -9,12 +9,10 @@ import java.util.*
  * Created by Jonah Robinson on 24/02/2019.
  */
 
-data class Set(
+data class Completed(
     var id: Int,
-    var locationName: String,
-    var difficulty: String,
-    var colour: String,
-    var identifier: String,
+    var setId: Int,
+    var routeNum: Int,
     var date: String,
-    var routes: Int
+    var tries: String
 )
