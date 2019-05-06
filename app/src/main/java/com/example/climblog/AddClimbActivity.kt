@@ -23,6 +23,7 @@ import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import kotlinx.android.synthetic.main.activity_navigation.*
 import java.time.Instant
+import java.time.LocalDate
 import java.util.*
 
 
@@ -84,7 +85,7 @@ class AddClimbActivity : AppCompatActivity() {
                         input_climb_difficulty.text.toString(),
                         selectedColor.toString(),
                         input_identifier.text.toString(),
-                        Date.from(Instant.EPOCH).toString(),
+                        LocalDate.now().toString(),
                         numRoutes
                     ), "set", FileHelper.getSetFilePath(applicationContext)
                 )

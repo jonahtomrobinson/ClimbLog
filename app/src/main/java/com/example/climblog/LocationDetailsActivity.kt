@@ -61,6 +61,13 @@ class LocationDetailsActivity : AppCompatActivity() {
         }
     }
 
+    /** Inflate menu_actionbar for the action bar. */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_actionbar_trash, menu)
+        return true
+    }
+
     /** On detach, clear the locations array.*/
     override fun onPause() {
         super.onPause()
@@ -69,7 +76,10 @@ class LocationDetailsActivity : AppCompatActivity() {
 
     private fun addSets(parsedData: ArrayList<Set>?) {
         if (parsedData != null) {
-            for (set in parsedData) {
+
+            val sortedParsedData= parsedData.sortedWith(compareBy {it.date})
+
+            for (set in sortedParsedData) {
                 if (set.locationName == intent.getStringExtra("locationName")) {
                     sets.add(set)
                 }
@@ -80,17 +90,33 @@ class LocationDetailsActivity : AppCompatActivity() {
     /** Inflate menu_actionbar for the action bar.
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.menu_actionbar_clean, menu)
+        inflater.inflate(R.menu.menu_actionbar_trash, menu)
         return true
     }*/
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_done -> {
-            //val editText = findViewById<EditText>(R.id.signupEmail)
-            //val message = editText.text.toString()
-            val intent = Intent(this, NavigationActivity::class.java)
-            startActivity(intent)
+        R.id.action_trash -> {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Are you sure you wish to delete this location?")
+
+            builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+                Toast.makeText(this.applicationContext,
+                    "Deleted", Toast.LENGTH_SHORT).show()
+                FileHelper.deleteData(intent.getStringExtra("locationName"), FileHelper.getLocationFilePath(applicationContext),"location" )
+                val intent = Intent(this, NavigationActivity::class.java)
+                startActivity(intent)
+
+            }
+
+            builder.setNegativeButton(android.R.string.no) { dialog, which ->
+
+            }
+
+            builder.create()
+            builder.show()
+
             true
+
         }
 
         else -> {

@@ -1,0 +1,76 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:theme="@android:style/Theme.Dialog"
+              android:layout_gravity="center"
+            android:id="@+id/LL">
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:text="How many attempts did it take?"
+              android:textSize="24sp" android:textAlignment="center" android:fontFamily="@font/ubuntu"
+              android:textAppearance="@style/TextAppearance.AppCompat.Medium" android:layout_marginTop="20px"
+              android:textColor="@color/colorOrange" android:textColorLink="@color/colorOrange"
+              android:textColorHighlight="@color/colorOrange" android:textColorHint="@color/colorDark"
+              android:layout_marginBottom="20px"
+                android:id="@+id/howManyText"/>
+
+
+    <RadioGroup
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/triesRadioGroupTop" android:gravity="center">
+
+        <RadioButton
+                style="@style/CustomRadioButtons"
+                android:id="@+id/rb_1"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:text="1"
+                android:background="@color/colorWhite"
+                android:button="@null"
+                android:textColor="@color/colorDark"
+                android:clickable="true" android:layout_margin="20px"/>
+        <RadioButton
+                style="@style/CustomRadioButtons"
+                android:id="@+id/rb_2"
+                android:layout_height="50dp"
+                android:text="2"
+                android:background="@color/colorWhite"
+                android:button="@null"
+                android:textColor="@color/colorDark"
+                android:layout_width="100dp"
+                android:clickable="true" android:layout_margin="20px"/>
+    </RadioGroup>
+    <RadioGroup
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/climbTypeRadioGroup"
+            android:gravity="center">
+
+        <RadioButton
+                style="@style/CustomRadioButtons"
+                android:id="@+id/rb_3"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:text="3"
+                android:background="@color/colorWhite"
+                android:button="@null"
+                android:textColor="@color/colorDark"
+                android:clickable="true" android:layout_margin="20px"/>
+        <RadioButton
+                style="@style/CustomRadioButtons"
+                android:id="@+id/rb_4"
+                android:layout_height="50dp"
+                android:text="4+"
+                android:background="@color/colorWhite"
+                android:button="@null"
+                android:textColor="@color/colorDark"
+                android:layout_width="100dp"
+                android:clickable="true"
+                android:buttonTint="@color/colorOrange" android:layout_margin="20px"/>
+    </RadioGroup>
+
+</LinearLayout>

@@ -6,10 +6,11 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorWhite" android:layout_margin="20dp"
+        android:background="@color/colorWhite"
         android:paddingBottom="10dp" android:paddingLeft="10dp" android:paddingRight="10dp"
         android:paddingTop="10dp"
-        android:id="@+id/tv">
+        android:id="@+id/tv" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp" android:layout_marginBottom="10dp" android:hapticFeedbackEnabled="false">
 
 
     <TextView
@@ -19,7 +20,7 @@
             android:padding="0dp"
             android:textColor="@color/colorDark"
             android:textStyle="bold" app:fontFamily="@font/ubuntu"
-            android:layout_width="69dp"
+            android:layout_width="75dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -48,15 +49,14 @@
             android:textStyle="bold" app:fontFamily="@font/ubuntu"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_width="152dp" app:layout_constraintStart_toEndOf="@+id/tv_set_difficulty"
+            android:layout_width="150dp" app:layout_constraintStart_toEndOf="@+id/tv_set_difficulty"
             app:layout_constraintBottom_toBottomOf="parent"
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
 
-            android:layout_marginStart="4dp"
             app:layout_constraintEnd_toStartOf="@+id/btn_completed"
-            app:layout_constraintHorizontal_bias="0.0"/>
+            app:layout_constraintHorizontal_bias="0.0" android:layout_marginStart="4dp"/>
 
     <TextView
             android:id="@+id/tv_set_color"
@@ -81,11 +81,9 @@
             android:id="@+id/btn_completed"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" android:textColor="@color/colorDark"
-            app:layout_constraintVertical_bias="0.523"
             android:buttonTint="@color/colorDark" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_set_identifier" android:layout_marginEnd="6dp"
+            app:layout_constraintStart_toEndOf="@+id/tv_set_identifier"
             android:layout_marginStart="4dp"/>
-
 
 
 </android.support.constraint.ConstraintLayout>

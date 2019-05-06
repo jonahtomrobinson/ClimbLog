@@ -27,7 +27,7 @@ class NavigationActivity : AppCompatActivity() {
         /** Adding a new Location.*/
         val message = intent.getStringArrayListExtra(EXTRA_NAV_ARRAY)
         if (message != null){
-            FileHelper.addData(Location( message[1], message[2], message[3], message[4].toBoolean(), message[5]),"location",FileHelper.getLocationFilePath(applicationContext))
+            FileHelper.addData(Location( FileHelper.nextId(FileHelper.getLocationFilePath(applicationContext),"location"), message[1], message[2], message[3], message[4].toBoolean(), message[5]),"location",FileHelper.getLocationFilePath(applicationContext))
             intent.removeExtra(EXTRA_NAV_ARRAY)
             Toast.makeText(this.applicationContext, "New location added.", Toast.LENGTH_SHORT).show()
 

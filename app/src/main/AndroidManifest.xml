@@ -11,8 +11,18 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".AddClimbActivity"
-            android:parentActivityName=".LocationDetailsActivity">
+        <activity android:name=".routeDetailsActivity">
+        </activity>
+        <activity
+                android:name=".setDetailsActivity"
+                android:parentActivityName=".LocationDetailsActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".LocationDetailsActivity"/>
+        </activity>
+        <activity
+                android:name=".AddClimbActivity"
+                android:parentActivityName=".LocationDetailsActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".LocationDetailsActivity"/>

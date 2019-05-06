@@ -14,5 +14,5 @@ data class Completed(
     var setId: Int,
     var routeNum: Int,
     var date: String,
-    var tries: String
+    var attempts: String
 )
