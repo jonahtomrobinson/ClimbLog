@@ -20,7 +20,7 @@ class setDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_set_details)
 
         setSupportActionBar(findViewById(R.id.my_toolbar))
-        supportActionBar?.title = intent.getStringExtra("setInfo")
+        supportActionBar?.title = intent.getStringExtra("setLocation") + " " + intent.getStringExtra("setDiff")
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -78,9 +78,10 @@ class setDetailsActivity : AppCompatActivity() {
             startActivity(intent)
             true
         }
-        R.id.homeAsUp -> {
-            Log.d("test","test")
-            val intent = Intent(this, MainActivity::class.java)
+        android.R.id.home-> {
+            val intent = Intent(this, LocationDetailsActivity::class.java).apply {
+                putExtra("locationName", intent.getStringExtra("setLocation"))
+            }
             startActivity(intent)
             true
         }

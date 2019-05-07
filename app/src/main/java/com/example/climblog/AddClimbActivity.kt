@@ -100,6 +100,13 @@ class AddClimbActivity : AppCompatActivity() {
 
             true
         }
+        android.R.id.home-> {
+            val intent = Intent(this, LocationDetailsActivity::class.java).apply {
+                putExtra("locationName", intent.getStringExtra("locationName"))
+            }
+            startActivity(intent)
+            true
+        }
 
         else -> {
             // If we got here, the user's action was not recognized.

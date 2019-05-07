@@ -58,7 +58,6 @@ class LocationAdapter(val items : ArrayList<Location>, val context: Context) : R
                 items[position].favourite = true
             }
             FileHelper.updateData(items[position].name,FileHelper.getLocationFilePath(context),"location", updateMap)
-            //Toast.makeText(context, updateMap.get("favourite"), Toast.LENGTH_SHORT).show()
             updateMap.clear()
         }
 

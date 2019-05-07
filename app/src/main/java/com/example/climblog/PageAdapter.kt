@@ -26,8 +26,7 @@ class PageAdapter internal constructor(fragmentManager: FragmentManager): Fragme
         return mFragmentTitleList.indexOf(title)
     }
 
-    override  fun getCount(): Int {
+    override fun getCount(): Int {
         return mFragmentList.size
     }
-
 }

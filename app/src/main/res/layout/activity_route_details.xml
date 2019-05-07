@@ -7,4 +7,78 @@
         android:layout_height="match_parent"
         tools:context=".routeDetailsActivity">
 
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@color/colorDark"
+            android:textColor="@color/colorOrange"
+            android:fontFamily="@font/ubuntu"
+            android:elevation="4dp"
+            android:theme="@style/AppTheme"
+            app:popupTheme="@style/AppTheme"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+    />
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_set_list"
+            android:layout_width="388dp"
+            android:layout_height="367dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
+            app:layout_constraintHorizontal_bias="0.428"
+            android:paddingTop="10dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_his_date"/>
+
+    <TextView
+            android:layout_width="0dp"
+            android:layout_height="53dp"
+            android:id="@+id/tv_identifier_title" android:fontFamily="@font/ubuntu"
+            android:textStyle="bold" android:textSize="40sp" android:textAlignment="center"
+            android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent" android:textColor="@color/colorOrange"
+            app:layout_constraintHorizontal_bias="0.0"/>
+    <TextView
+            android:text="#"
+            android:layout_width="50dp"
+            android:layout_height="0dp"
+            android:id="@+id/tv_his_num"
+            android:textSize="20sp"
+            android:padding="0dp"
+            android:textColor="@color/colorDark"
+            android:textStyle="bold" app:fontFamily="@font/opensans"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_identifier_title"
+            android:paddingLeft="10dp" android:layout_marginStart="20dp"/>
+    <TextView
+            android:text="Attempts"
+            android:layout_width="120dp"
+            android:layout_height="0dp"
+            android:id="@+id/tv_his_attempts"
+            android:textSize="20sp"
+            android:padding="0dp"
+            android:textColor="@color/colorDark"
+            android:textStyle="bold" app:fontFamily="@font/opensans"
+            app:layout_constraintStart_toEndOf="@+id/tv_his_date" android:layout_marginStart="4dp"
+            android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/tv_identifier_title"
+    />
+    <TextView
+            android:text="Date"
+            android:layout_width="155dp"
+            android:layout_height="0dp"
+            android:id="@+id/tv_his_date"
+            android:textSize="20sp"
+            android:padding="0dp"
+            android:textColor="@color/colorDark"
+            android:textStyle="bold" app:fontFamily="@font/opensans"
+            app:layout_constraintStart_toEndOf="@+id/tv_his_num" android:layout_marginStart="4dp"
+            android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/tv_identifier_title"
+    />
+
+
 </android.support.constraint.ConstraintLayout>

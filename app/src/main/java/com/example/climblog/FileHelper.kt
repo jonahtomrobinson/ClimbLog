@@ -38,7 +38,7 @@ class FileHelper {
             }
 
             /** Loop Json Array and remove case where id == passed id.*/
-            for (i in 0 until jsonArray.length()) {
+            for (i in 0 until jsonArray.length() - 1) {
                 if (jsonArray.getJSONObject(i).getString(uniqueId) == id) {
                     updatedItem = jsonObjToKotObj(jsonArray.getJSONObject(i), type)
                     jsonArray.remove(i)
@@ -85,7 +85,7 @@ class FileHelper {
             }
 
             /** Loop Json Array and remove case where id == passed id.*/
-            for (i in 0 until jsonArray.length()) {
+            for (i in 0 until jsonArray.length() - 1) {
                 if (jsonArray.getJSONObject(i).getString(uniqueId) == id) {
                     jsonArray.remove(i)
                 }

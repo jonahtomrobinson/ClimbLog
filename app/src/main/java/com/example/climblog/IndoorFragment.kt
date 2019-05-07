@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_indoor.*
+import kotlinx.android.synthetic.main.location_item.*
 import kotlin.collections.ArrayList
 
 class IndoorFragment : Fragment() {
@@ -41,11 +43,14 @@ class IndoorFragment : Fragment() {
         rv_location_list.adapter = LocationAdapter(locations, context!!)
 
         /** Listener for addLocation floating button.*/
-        float_add_location.setOnClickListener { view ->
+        float_add_location_in.setOnClickListener { view ->
             val intent = Intent(activity, AddLocationActivity::class.java)
             startActivity(intent)
         }
 
+        rv_location_list.setOnClickListener {
+            rv_location_list.adapter = LocationAdapter(locations, context!!)
+        }
     }
 
     /** On detach, clear the locations array.*/

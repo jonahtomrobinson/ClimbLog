@@ -1,7 +1,9 @@
 package com.example.climblog
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -15,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_location_details.*
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.fragment_indoor.*
 import java.time.Instant
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -29,11 +32,6 @@ class LocationDetailsActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.title = intent.getStringExtra("locationName")
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-
-        //tv_location_name.text = FileHelper.nextId(FileHelper.getSetFilePath(applicationContext), "set").toString()
-
-        //FileHelper.addData(Set( FileHelper.nextId(FileHelper.getSetFilePath(applicationContext),"set"), intent.getStringExtra("locationName"), "V2", "Black", "1 - 8", Date.from(Instant.EPOCH).toString()),"set",FileHelper.getSetFilePath(applicationContext))
     }
 
     override fun onStart() {
@@ -46,7 +44,7 @@ class LocationDetailsActivity : AppCompatActivity() {
             addSets(setArray as ArrayList<Set>)
         }
 
-        //Creates a vertical Layout Manager
+        /** Creates a vertical Layout Manager. */
         rv_set_list.layoutManager = LinearLayoutManager(applicationContext)
 
         /** Access the RecyclerView Adapter and loads the local locations array data into it.*/
@@ -58,6 +56,40 @@ class LocationDetailsActivity : AppCompatActivity() {
                 putExtra("locationName", intent.getStringExtra("locationName"))
             }
             startActivity(newIntent)
+        }
+
+        val preferences = applicationContext.getSharedPreferences("com.example.app.STATE", Context.MODE_PRIVATE)
+        if (preferences.getString("state","") != ""){
+            float_session.setImageResource(R.drawable.ic_timer_off)
+        }
+
+        /** Listener for session floating button.*/
+        float_session.setOnClickListener { view ->
+            val editor = preferences.edit()
+
+            /** Starting a session. */
+            if (preferences.getString("state", "") == ""){
+                float_session.setImageResource(R.drawable.ic_timer_off)
+                editor.putString("state", LocalDateTime.now().toString())
+                editor.apply()
+                Toast.makeText(this.applicationContext,
+                    "Session started", Toast.LENGTH_SHORT).show()
+
+                /** Refresh the recycle view.*/
+                rv_set_list.adapter = SetAdapter(sets, this)
+            }
+
+            /** Ending a session. */
+            else{
+                float_session.setImageResource(R.drawable.ic_timer)
+                Toast.makeText(this.applicationContext,
+                    "Session ended", Toast.LENGTH_SHORT).show()
+                editor.putString("state", "")
+                editor.apply()
+
+                /** Refresh the recycle view.*/
+                rv_set_list.adapter = SetAdapter(sets, this)
+            }
         }
     }
 
@@ -101,22 +133,16 @@ class LocationDetailsActivity : AppCompatActivity() {
 
             builder.setPositiveButton(android.R.string.yes) { dialog, which ->
                 Toast.makeText(this.applicationContext,
-                    "Deleted", Toast.LENGTH_SHORT).show()
+                    "Deleted "+intent.getStringExtra("locationName"), Toast.LENGTH_SHORT).show()
                 FileHelper.deleteData(intent.getStringExtra("locationName"), FileHelper.getLocationFilePath(applicationContext),"location" )
                 val intent = Intent(this, NavigationActivity::class.java)
                 startActivity(intent)
 
             }
-
-            builder.setNegativeButton(android.R.string.no) { dialog, which ->
-
-            }
-
+            builder.setNegativeButton(android.R.string.no) { dialog, which -> }
             builder.create()
             builder.show()
-
             true
-
         }
 
         else -> {

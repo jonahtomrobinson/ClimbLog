@@ -8,54 +8,65 @@
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
+            android:roundIcon="@mipmap/ic_launcher"
             android:supportsRtl="true"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".routeDetailsActivity">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:screenOrientation="portrait">
+        <activity android:name=".routeDetailsActivity"
+                  android:parentActivityName=".LocationDetailsActivity"
+                  android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".setDetailsActivity"
-                android:parentActivityName=".LocationDetailsActivity">
+                android:parentActivityName=".LocationDetailsActivity"
+                android:screenOrientation="portrait">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".LocationDetailsActivity"/>
         </activity>
         <activity
                 android:name=".AddClimbActivity"
-                android:parentActivityName=".LocationDetailsActivity">
+                android:parentActivityName=".LocationDetailsActivity"
+                android:screenOrientation="portrait">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".LocationDetailsActivity"/>
         </activity>
         <activity
                 android:name=".LocationDetailsActivity"
-                android:parentActivityName=".NavigationActivity">
+                android:parentActivityName=".NavigationActivity"
+                android:screenOrientation="portrait">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".NavigationActivity"/>
+                    android:value=".NavigationActivity"
+                    android:screenOrientation="portrait"/>
         </activity>
         <activity
                 android:name=".NavigationActivity"
-                android:label="@string/title_activity_test">
+                android:label="@string/title_activity_test"
+                android:screenOrientation="portrait">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".NavigationActivity"/>
         </activity>
         <activity
                 android:name=".AddLocationActivity"
-                android:parentActivityName=".NavigationActivity">
+                android:parentActivityName=".NavigationActivity"
+                android:screenOrientation="portrait">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".NavigationActivity"/>
         </activity>
         <activity
                 android:name=".SignUpActivity"
-                android:parentActivityName=".MainActivity">
+                android:parentActivityName=".MainActivity"
+                android:screenOrientation="portrait">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".MainActivity"/>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.intent.action.VIEW"/>

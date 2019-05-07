@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_indoor.*
+import kotlinx.android.synthetic.main.fragment_indoor.rv_location_list
+import kotlinx.android.synthetic.main.fragment_outdoor.*
 
 
 class OutdoorFragment : Fragment() {
@@ -42,7 +44,7 @@ class OutdoorFragment : Fragment() {
         rv_location_list.adapter = LocationAdapter(locations, context!!)
 
         /** Listener for addLocations button.*/
-        float_add_location.setOnClickListener { view ->
+        float_add_location_out.setOnClickListener { view ->
             val intent = Intent(activity, AddLocationActivity::class.java)
             startActivity(intent)
         }
