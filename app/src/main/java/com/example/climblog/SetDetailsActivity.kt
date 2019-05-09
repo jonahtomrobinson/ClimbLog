@@ -1,5 +1,6 @@
 package com.example.climblog
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -9,9 +10,16 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_location_details.*
 
-class setDetailsActivity : AppCompatActivity() {
+/**
+ * @desc Activity which shows the "details" of a set, a collection of routes (single climbs).
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
+
+class SetDetailsActivity : AppCompatActivity() {
 
     private val routes: ArrayList<Set> = ArrayList()
 
@@ -19,6 +27,7 @@ class setDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_details)
 
+        /** Set the custom actionbar and title.*/
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.title = intent.getStringExtra("setLocation") + " " + intent.getStringExtra("setDiff")
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -29,7 +38,7 @@ class setDetailsActivity : AppCompatActivity() {
         routes.clear()
 
         /** Loads locations from the JSON Location file into the local locations ArrayList.*/
-        val setArray = FileHelper.parseJSON(FileHelper.getSetFilePath(applicationContext), "set")
+        val setArray = FileHelper.parseJSON("set", FileHelper.getSetFilePath(applicationContext))
         if (!setArray.isEmpty() && setArray[0] is Set) {
             addRoutes(setArray as ArrayList<Set>)
         }
@@ -48,11 +57,14 @@ class setDetailsActivity : AppCompatActivity() {
         routes.clear()
     }
 
+    /** Adds the appropriate routes to the ArrayList to be displayed */
     private fun addRoutes(parsedData: ArrayList<Set>?) {
         if (parsedData != null) {
             for (set in parsedData) {
-                if (set.id == intent.getIntExtra("setId",0)) {
+                if (set.id == intent.getIntExtra("setId", 0)) {
                     for (route in 1..set.routes) {
+
+                        /** As routes are sets containing only a single route, create the temporary routes objects. */
                         routes.add(
                             Set(
                                 set.id,
@@ -70,15 +82,40 @@ class setDetailsActivity : AppCompatActivity() {
         }
     }
 
+    /** Inflate menu_actionbar_trash for the action bar. */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_actionbar_trash, menu)
+        return true
+    }
+
+    /** Action bar button listeners. */
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.action_done -> {
-            //val editText = findViewById<EditText>(R.id.signupEmail)
-            //val message = editText.text.toString()
-            val intent = Intent(this, NavigationActivity::class.java)
-            startActivity(intent)
+        R.id.action_trash -> {
+
+            /** Deletion confirmation popup message.*/
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Are you sure you wish to delete this set?")
+
+            builder.setPositiveButton(android.R.string.yes) { dialog, which ->
+                showMessage("Deleted " + intent.getStringExtra("setIdentifier"))
+                FileHelper.deleteData(
+                    intent.getIntExtra("setId",-1),
+                    "set",
+                    FileHelper.getSetFilePath(applicationContext)
+                )
+                val intent = Intent(this, LocationDetailsActivity::class.java).apply {
+                    putExtra("locationName", intent.getStringExtra("setLocation"))
+                }
+                startActivity(intent)
+
+            }
+            builder.setNegativeButton(android.R.string.no) { dialog, which -> }
+            builder.create()
+            builder.show()
             true
         }
-        android.R.id.home-> {
+        android.R.id.home -> {
             val intent = Intent(this, LocationDetailsActivity::class.java).apply {
                 putExtra("locationName", intent.getStringExtra("setLocation"))
             }
@@ -91,6 +128,14 @@ class setDetailsActivity : AppCompatActivity() {
             // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
+    }
+
+    /** Helper function for displaying toast popups. */
+    private fun showMessage(message: String) {
+        Toast.makeText(
+            this, message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.climblog
 
+import android.app.Application
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -22,10 +23,16 @@ import com.flask.colorpicker.OnColorSelectedListener
 import com.flask.colorpicker.ColorPickerView
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder
 import kotlinx.android.synthetic.main.activity_navigation.*
+import kotlinx.android.synthetic.main.activity_sign_up.*
 import java.time.Instant
 import java.time.LocalDate
 import java.util.*
 
+/**
+ * @desc Form for adding new climbs (routes or sets).
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
 
 class AddClimbActivity : AppCompatActivity() {
 
@@ -45,62 +52,58 @@ class AddClimbActivity : AppCompatActivity() {
         np.minValue = 0
         np.maxValue = 100
         np.wrapSelectorWheel = false
-
-        var test = "start"
-        if(intent.getStringExtra("locationName") != null){
-            test = intent.getStringExtra("locationName")
-        }
-        Log.d("debug1", test)
-        //val helper: LinearSnapHelper
-        //helper.attachToRecyclerView(HSV_difficulties2)
     }
 
     /** Inflate menu_actionbar for the action bar.*/
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_actionbar, menu)
-        Log.d("debug1","ONCREATE")
+        Log.d("debug1", "ONCREATE")
         return true
     }
 
-    /** On confirm creation of a new location.*/
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+
+        /** Upon click of the action_done button, add a new set.*/
         R.id.action_done -> {
-            Log.d("debug1","ONSLECT")
 
-            val locationName = intent.getStringExtra("locationName")
-            if (input_identifier.toString() != "") {
+            val difficulty = input_climb_difficulty.text.toString()
 
-                Log.d("debug1","Before")
-
+            /** Validate inputs */
+            if (selectedColor != 0 && difficulty != "" &&
+                (input_number_picker.value != 0 || input_identifier.text.toString() != "")
+            ) {
+                val locationName = intent.getStringExtra("locationName")
                 var numRoutes = 0
-                if (input_number_picker.value != 0){
-                   numRoutes = input_number_picker.value
+                if (input_number_picker.value != 0) {
+                    numRoutes = input_number_picker.value
                 }
 
+                /** Adding a new set. */
                 FileHelper.addData(
                     Set(
-                        FileHelper.nextId(FileHelper.getSetFilePath(applicationContext),"set"),
+                        FileHelper.nextId("set", FileHelper.getSetFilePath(applicationContext)),
                         locationName,
-                        input_climb_difficulty.text.toString(),
+                        input_climb_difficulty.text.toString().toUpperCase(),
                         selectedColor.toString(),
                         input_identifier.text.toString(),
                         LocalDate.now().toString(),
                         numRoutes
                     ), "set", FileHelper.getSetFilePath(applicationContext)
                 )
-                Log.d("debug1","During")
                 val intent = Intent(this, LocationDetailsActivity::class.java).apply {
                     putExtra("locationName", locationName)
+                    showMessage("New climb added")
                 }
-                Log.d("debug1","After")
                 startActivity(intent)
-                //finish()
+            } else {
+                showMessage("Please complete all inputs")
             }
-
             true
         }
-        android.R.id.home-> {
+
+        /** Upon click of the home button, return to the previous view/page. */
+        android.R.id.home -> {
             val intent = Intent(this, LocationDetailsActivity::class.java).apply {
                 putExtra("locationName", intent.getStringExtra("locationName"))
             }
@@ -120,7 +123,7 @@ class AddClimbActivity : AppCompatActivity() {
             // Is the button now checked?
             val checked = view.isChecked
 
-            // Check which radio button was clicked
+            /** Check which radio button was clicked, and format appropriately. */
             when (view.getId()) {
                 R.id.radio_route ->
                     if (checked) {
@@ -145,6 +148,7 @@ class AddClimbActivity : AppCompatActivity() {
         }
     }
 
+    /** Colour picker setup. */
     fun onButtonClick(view: View) {
         ColorPickerDialogBuilder
             .with(view.context)
@@ -166,4 +170,13 @@ class AddClimbActivity : AppCompatActivity() {
             .show()
 
     }
+
+    /** Helper function for displaying toast popups. */
+    private fun showMessage(message: String) {
+        Toast.makeText(
+            this, message,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
 }

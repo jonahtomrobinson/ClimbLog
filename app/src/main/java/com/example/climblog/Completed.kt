@@ -1,12 +1,9 @@
 package com.example.climblog
 
-import android.graphics.Color
-import android.location.Address
-import java.time.LocalDate
-import java.util.*
-
 /**
- * Created by Jonah Robinson on 24/02/2019.
+ * @desc Data class for Completed items.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
  */
 
 data class Completed(

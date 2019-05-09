@@ -4,7 +4,13 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 
-class PageAdapter internal constructor(fragmentManager: FragmentManager): FragmentPagerAdapter(fragmentManager) {
+/**
+ * @desc Basic page adapter class, handles changing between fragments on the navigation page.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
+
+class PageAdapter internal constructor(fragmentManager: FragmentManager) : FragmentPagerAdapter(fragmentManager) {
 
     private val mFragmentList = ArrayList<Fragment>()
     private val mFragmentTitleList = ArrayList<String>()

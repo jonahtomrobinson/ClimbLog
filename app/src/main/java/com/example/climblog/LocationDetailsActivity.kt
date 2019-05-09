@@ -21,6 +21,12 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * @desc Activity which shows the "details" of a location, e.g. the climbs (sets/routes) at the location.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
+
 class LocationDetailsActivity : AppCompatActivity() {
 
     private val sets: ArrayList<Set> = ArrayList()
@@ -29,6 +35,7 @@ class LocationDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location_details)
 
+        /** Set the custom actionbar and title.*/
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.title = intent.getStringExtra("locationName")
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -38,9 +45,9 @@ class LocationDetailsActivity : AppCompatActivity() {
         super.onStart()
         sets.clear()
 
-        /** Loads locations from the JSON Location file into the local locations ArrayList.*/
-        val setArray = FileHelper.parseJSON(FileHelper.getSetFilePath(applicationContext), "set")
-        if (!setArray.isEmpty() && setArray[0] is Set) {
+        /** Loads sets from the JSON Location file into the local locations ArrayList.*/
+        val setArray = FileHelper.parseJSON("set", FileHelper.getSetFilePath(applicationContext))
+        if (setArray.isNotEmpty() && setArray[0] is Set) {
             addSets(setArray as ArrayList<Set>)
         }
 
@@ -50,7 +57,7 @@ class LocationDetailsActivity : AppCompatActivity() {
         /** Access the RecyclerView Adapter and loads the local locations array data into it.*/
         rv_set_list.adapter = SetAdapter(sets, this)
 
-        /** Listener for addLocation floating button.*/
+        /** Listener for addSet floating button.*/
         float_add_set.setOnClickListener { view ->
             val newIntent = Intent(this, AddClimbActivity::class.java).apply {
                 putExtra("locationName", intent.getStringExtra("locationName"))
@@ -59,7 +66,7 @@ class LocationDetailsActivity : AppCompatActivity() {
         }
 
         val preferences = applicationContext.getSharedPreferences("com.example.app.STATE", Context.MODE_PRIVATE)
-        if (preferences.getString("state","") != ""){
+        if (preferences.getString("state", "") != "") {
             float_session.setImageResource(R.drawable.ic_timer_off)
         }
 
@@ -68,22 +75,20 @@ class LocationDetailsActivity : AppCompatActivity() {
             val editor = preferences.edit()
 
             /** Starting a session. */
-            if (preferences.getString("state", "") == ""){
+            if (preferences.getString("state", "") == "") {
                 float_session.setImageResource(R.drawable.ic_timer_off)
+                showMessage("Session started")
                 editor.putString("state", LocalDateTime.now().toString())
                 editor.apply()
-                Toast.makeText(this.applicationContext,
-                    "Session started", Toast.LENGTH_SHORT).show()
 
                 /** Refresh the recycle view.*/
                 rv_set_list.adapter = SetAdapter(sets, this)
             }
 
             /** Ending a session. */
-            else{
+            else {
                 float_session.setImageResource(R.drawable.ic_timer)
-                Toast.makeText(this.applicationContext,
-                    "Session ended", Toast.LENGTH_SHORT).show()
+                showMessage("Session ended")
                 editor.putString("state", "")
                 editor.apply()
 
@@ -93,7 +98,7 @@ class LocationDetailsActivity : AppCompatActivity() {
         }
     }
 
-    /** Inflate menu_actionbar for the action bar. */
+    /** Inflate menu_actionbar_trash for the action bar. */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_actionbar_trash, menu)
@@ -109,7 +114,7 @@ class LocationDetailsActivity : AppCompatActivity() {
     private fun addSets(parsedData: ArrayList<Set>?) {
         if (parsedData != null) {
 
-            val sortedParsedData= parsedData.sortedWith(compareBy {it.date})
+            val sortedParsedData = parsedData.sortedWith(compareBy { it.date })
 
             for (set in sortedParsedData) {
                 if (set.locationName == intent.getStringExtra("locationName")) {
@@ -119,24 +124,31 @@ class LocationDetailsActivity : AppCompatActivity() {
         }
     }
 
-    /** Inflate menu_actionbar for the action bar.
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.menu_actionbar_trash, menu)
-        return true
-    }*/
-
+    /** Action bar button listeners. */
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_trash -> {
+
+            /** Deletion confirmation popup message.*/
             val builder = AlertDialog.Builder(this)
             builder.setMessage("Are you sure you wish to delete this location?")
 
             builder.setPositiveButton(android.R.string.yes) { dialog, which ->
-                Toast.makeText(this.applicationContext,
-                    "Deleted "+intent.getStringExtra("locationName"), Toast.LENGTH_SHORT).show()
-                FileHelper.deleteData(intent.getStringExtra("locationName"), FileHelper.getLocationFilePath(applicationContext),"location" )
-                val intent = Intent(this, NavigationActivity::class.java)
-                startActivity(intent)
+                showMessage("Deleted " + intent.getStringExtra("locationName"))
+
+                val locationArray = FileHelper.parseJSON("location", FileHelper.getLocationFilePath(applicationContext))
+                if (locationArray.isNotEmpty() && locationArray[0] is Location) {
+                    val id = findIdFromName(locationArray as ArrayList<Location>)
+                    if (id >= 0){
+
+                        FileHelper.deleteData(
+                            id,
+                            "location",
+                            FileHelper.getLocationFilePath(applicationContext)
+                        )
+                        val intent = Intent(this, NavigationActivity::class.java)
+                        startActivity(intent)
+                    }
+                }
 
             }
             builder.setNegativeButton(android.R.string.no) { dialog, which -> }
@@ -150,5 +162,24 @@ class LocationDetailsActivity : AppCompatActivity() {
             // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun findIdFromName(parsedData: ArrayList<Location>?): Int {
+        if (parsedData != null) {
+            for (location in parsedData) {
+                if (location.name == intent.getStringExtra("locationName")) {
+                    return location.id
+                }
+            }
+        }
+        return -1
+    }
+
+    /** Helper function for displaying toast popups. */
+    private fun showMessage(message: String) {
+        Toast.makeText(
+            this, message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }

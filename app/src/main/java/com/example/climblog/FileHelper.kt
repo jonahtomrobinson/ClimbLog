@@ -1,6 +1,5 @@
 package com.example.climblog
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
 import org.json.JSONArray
@@ -10,9 +9,14 @@ import java.lang.Exception
 import java.nio.channels.FileChannel
 import java.nio.charset.Charset
 
+
+
 /**
- * Created by Jonah Robinson on 04/03/2019.
+ * @desc Static helper class for interacting with JSON files.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
  */
+
 class FileHelper {
 
     companion object {
@@ -22,8 +26,12 @@ class FileHelper {
 
         /** Update JSON data.
          * Pass in. id: unique object id, filepath, type: Object type, locMap.
+         * @param id: The unique id of the item.
+         * @param type: A string storing the item's type.
+         * @param MutableMap: A map containing the data to update.
+         * @param filePath: The string filepath of the respective JSON file.
          */
-        fun updateData(id: String, filePath: String, type: String, locMap: MutableMap<String, String>) {
+        fun updateData(id: Int, type: String, locMap: MutableMap<String, String>, filePath: String) {
             val json = JSONObject()
             val jsonArray = getJSONArray(type, filePath)
 
@@ -32,18 +40,23 @@ class FileHelper {
 
             /** Decide unique id based on object type*/
             when (type) {
-                "location" -> uniqueId = "name"
+                "location" -> uniqueId = "id"
+                "set" -> uniqueId = "id"
                 else -> return
 
             }
 
+            var toRemove = -1
             /** Loop Json Array and remove case where id == passed id.*/
-            for (i in 0 until jsonArray.length() - 1) {
-                if (jsonArray.getJSONObject(i).getString(uniqueId) == id) {
+            for (i in 0..jsonArray.length()-1) {
+                if (jsonArray.getJSONObject(i).get(uniqueId) == id) {
                     updatedItem = jsonObjToKotObj(jsonArray.getJSONObject(i), type)
-                    jsonArray.remove(i)
+                    toRemove = i
                 }
+            }
 
+            if (toRemove != -1){
+                jsonArray.remove(toRemove)
             }
 
             /** If case found add it to the bottom of the JSON file.*/
@@ -67,38 +80,50 @@ class FileHelper {
             saveJSON(json.toString(), filePath)
         }
 
+        /** Delete Json item. */
+
         /**
-         * Delete Json item
+         * Deletes a Json item from its respective file.
+         *
+         * @param id: The an id for the item being deleted.
+         * @param type: A string storing the item's type.
+         * @param filePath: The string filepath of the respective JSON file.
          */
-        fun deleteData(id: String, filePath: String, type: String) {
+        fun deleteData(id: Int, type: String, filePath: String) {
             val json = JSONObject()
             val jsonArray = getJSONArray(type, filePath)
 
-            var uniqueId: String
+            var itemId: String
 
             /** Decide unique id based on object type*/
             when (type) {
-                "location" -> uniqueId = "name"
-                "set" -> uniqueId = "id"
+                "location" -> itemId = "id"
+                "set" -> itemId = "id"
+                "completed" -> itemId = "setId"
                 else -> return
 
             }
 
+            var toRemove = ArrayList<Int>()
             /** Loop Json Array and remove case where id == passed id.*/
-            for (i in 0 until jsonArray.length() - 1) {
-                if (jsonArray.getJSONObject(i).getString(uniqueId) == id) {
-                    jsonArray.remove(i)
+            for (i in 0..jsonArray.length() - 1) {
+                if (jsonArray.getJSONObject(i).getInt(itemId) == id) {
+                    toRemove.add(i)
                 }
 
             }
+
+            if (toRemove.isNotEmpty()){
+                for (i in toRemove)
+                jsonArray.remove(i)
+            }
+
             json.put(type, jsonArray)
             saveJSON(json.toString(), filePath)
 
         }
 
-        /**
-         * Add an item to the correct Json file.
-         */
+        /** Add an item to the correct Json file.*/
         fun addData(obj: Any, type: String, filePath: String) {
             val json = JSONObject()
             val jsonArray = getJSONArray(type, filePath)
@@ -109,12 +134,22 @@ class FileHelper {
             saveJSON(json.toString(), filePath)
         }
 
-        /** Utility function, gets JSON array using a filePath and array name.*/
-        private fun getJSONArray(name: String, filePath: String): JSONArray {
-            return JSONObject(readFile((filePath))).getJSONArray(name)
+        /**
+         * Utility function, gets JSON array using a filePath and array name.
+         *
+         * @param type: A string storing the item's type.
+         * @param filePath: The string filepath of the respective JSON file.
+         */
+        private fun getJSONArray(type: String, filePath: String): JSONArray {
+            return JSONObject(readFile((filePath))).getJSONArray(type)
         }
 
-        /** Convert a kotlin object to a JSON object.*/
+        /**
+         * Convert a kotlin object to a JSON object.
+         *
+         * @param obj: A kotlin object.
+         * @return JSONObject?: A nullable JSONObject version of obj.
+         */
         private fun kotObjToJsonObj(obj: Any): JSONObject? {
             when (obj) {
                 is Location -> return JSONObject()
@@ -142,7 +177,13 @@ class FileHelper {
             }
         }
 
-        /** Convert a JSON object to a kotlin object.*/
+        /**
+         * Convert a kotlin object to a JSON object.
+         *
+         * @param JSONObject: A JSONObject.
+         * @param type: A string storing the item's type.
+         * @return ANY: THe respective kotlin object to the JSON object based on type.
+         */
         private fun jsonObjToKotObj(jsonObject: JSONObject, type: String): Any? {
             when (type) {
                 "location" -> return Location(
@@ -173,7 +214,12 @@ class FileHelper {
             }
         }
 
-        /** Read a file as a stream. Returns JSON string.*/
+        /**
+         * Read a file as a stream. Returns JSON string.
+         *
+         * @param filePath: The string filepath of the respective JSON file.
+         * @return String: The read file as a JSON string.
+         */
         private fun readFile(filePath: String): String {
             try {
                 val stream = FileInputStream(filePath)
@@ -194,7 +240,12 @@ class FileHelper {
             }
         }
 
-        /** Save a JSON string into a file.*/
+        /**
+         * Save a JSON string into a file.
+         *
+         * @param jsonString: A input JSON file as a JSON string.
+         * @param filePath: The string filepath of the respective JSON file.
+         */
         private fun saveJSON(jsonString: String, filePath: String) {
             val output: Writer
             val file: File? = File(filePath)
@@ -219,6 +270,7 @@ class FileHelper {
             return filePath
         }
 
+        /** Get the file path for Set.json.*/
         fun getSetFilePath(context: Context): String {
             val fileName = "Sets.json"
             val storageDir = context.filesDir
@@ -232,6 +284,7 @@ class FileHelper {
             return filePath
         }
 
+        /** Get the file path for Completed.json.*/
         fun getCompletedFilePath(context: Context): String {
             val fileName = "Completed.json"
             val storageDir = context.filesDir
@@ -245,27 +298,37 @@ class FileHelper {
             return filePath
         }
 
-        /** Parses a JSON file and returns an ArrayList containing the values.*/
-        fun parseJSON(filePath: String, name: String): ArrayList<Any> {
+        /**
+         * Parses a JSON file and returns an ArrayList containing the values.
+         *
+         * @param type: A string storing the item's type.
+         * @param filePath: The string filepath of the respective JSON file.
+         * @return ArrayList<Any>: An ArrayList holding an array of item objects of the respective type.
+         */
+        fun parseJSON(type: String, filePath: String): ArrayList<Any> {
             val file = readFile(filePath)
             val arrayList = ArrayList<Any>()
 
             if (file != "") {
                 val jsonObject = JSONObject(readFile(filePath))
-                for (i in 0..(jsonObject.getJSONArray(name).length() - 1)) {
-                    arrayList.add(jsonObjToKotObj(jsonObject.getJSONArray(name).getJSONObject(i), name) as Any)
+                for (i in 0..(jsonObject.getJSONArray(type).length() - 1)) {
+                    arrayList.add(jsonObjToKotObj(jsonObject.getJSONArray(type).getJSONObject(i), type) as Any)
                 }
             }
 
             return arrayList
         }
 
-        /** Find the next "ID"/counter value for the JSON file.*/
-        fun nextId(filePath: String, name: String): Int {
+        /** Find the next "ID"/counter value for the JSON file.
+         *
+         * @param type: A string storing the item's type.
+         * @param filePath: The string filepath of the respective JSON file.
+         */
+        fun nextId(type: String, filePath: String): Int {
 
-            when (name) {
+            when (type) {
                 "location" -> {
-                    val array = parseJSON(filePath, name) as ArrayList<Location>
+                    val array = parseJSON(type, filePath) as ArrayList<Location>
                     var largestId = 0
                     for (item in array) {
                         if (item.id > largestId)
@@ -274,7 +337,7 @@ class FileHelper {
                     return largestId + 1
                 }
                 "set" -> {
-                    val array = parseJSON(filePath, name) as ArrayList<Set>
+                    val array = parseJSON(type, filePath) as ArrayList<Set>
                     var largestId = 0
                     for (item in array) {
                         if (item.id > largestId)
@@ -283,7 +346,7 @@ class FileHelper {
                     return largestId + 1
                 }
                 "completed" -> {
-                    val array = parseJSON(filePath, name) as ArrayList<Completed>
+                    val array = parseJSON(type, filePath) as ArrayList<Completed>
                     var largestId = 0
                     for (item in array) {
                         if (item.id > largestId)

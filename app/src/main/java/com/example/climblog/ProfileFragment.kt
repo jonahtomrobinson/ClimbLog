@@ -1,9 +1,6 @@
 package com.example.climblog
 
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -12,10 +9,15 @@ import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_profile.*
 
+/**
+ * @desc Fragment for the profile view/page. Displays basic information on the user and membership items.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
 
 class ProfileFragment : Fragment() {
 
-    val fbAuth = FirebaseAuth.getInstance()
+    private val fbAuth = FirebaseAuth.getInstance()
 
     companion object {
         fun newInstance(): ProfileFragment {
@@ -30,13 +32,12 @@ class ProfileFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if (fbAuth.currentUser?.displayName != null){
+        if (fbAuth.currentUser?.displayName != null) {
             tv_profile_name.text = fbAuth.currentUser?.displayName.toString()
             tv_profile_name.visibility = View.VISIBLE
             tv_profile.visibility = View.GONE
             btn_login_link.visibility = View.GONE
-        }
-        else{
+        } else {
             tv_profile.visibility = View.VISIBLE
             btn_login_link.visibility = View.VISIBLE
             tv_profile_name.visibility = View.GONE

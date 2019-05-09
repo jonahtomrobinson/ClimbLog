@@ -16,11 +16,17 @@ import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.fragment_indoor.*
 import kotlinx.android.synthetic.main.fragment_outdoor.*
 
+/**
+ * @desc Navigation view/page displaying the fragment options: indoor/outdoor/history/profile.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
 
 class NavigationActivity : AppCompatActivity() {
 
     private val pageAdapter = PageAdapter(supportFragmentManager)
 
+    /** Listener for bottom navigation bar.*/
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         message.text = item.title
         supportActionBar?.title = item.title
@@ -31,6 +37,8 @@ class NavigationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        /** Assign view and support action bar. */
         setContentView(R.layout.activity_navigation)
         setSupportActionBar(findViewById(R.id.my_toolbar))
 
@@ -40,13 +48,13 @@ class NavigationActivity : AppCompatActivity() {
             FileHelper.addData(
                 Location(
                     FileHelper.nextId(
-                        FileHelper.getLocationFilePath(applicationContext),
-                        "location"
+                        "location",
+                        FileHelper.getLocationFilePath(applicationContext)
                     ), message[1], message[2], message[3], message[4].toBoolean(), message[5]
                 ), "location", FileHelper.getLocationFilePath(applicationContext)
             )
             intent.removeExtra(EXTRA_NAV_ARRAY)
-            Toast.makeText(this.applicationContext, "New location added.", Toast.LENGTH_SHORT).show()
+            showMessage("New location added.")
         }
 
         /** Initialise navigation bar */
@@ -55,15 +63,15 @@ class NavigationActivity : AppCompatActivity() {
         pageAdapter.addFragment(HistoryFragment.newInstance(), resources.getString(R.string.title_history))
         pageAdapter.addFragment(ProfileFragment.newInstance(), resources.getString(R.string.title_profile))
         view_pager.adapter = pageAdapter
-
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
+        /** Listener for changes to the view_pager, when swiped, act accordingly. */
+        view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 
                 if (positionOffset.compareTo(0.0) == 0) {
                     /** Show all floating buttons. Both indoor and outdoor.*/
-                    when (navigation.menu.getItem(position).itemId){
+                    when (navigation.menu.getItem(position).itemId) {
                         R.id.navigation_indoor -> float_add_location_in.show()
                         R.id.navigation_outdoor -> float_add_location_out.show()
                     }
@@ -76,6 +84,7 @@ class NavigationActivity : AppCompatActivity() {
                     float_add_location_out.hide()
                 }
             }
+
             override fun onPageSelected(position: Int) {}
             override fun onPageScrollStateChanged(state: Int) {}
         })
@@ -88,6 +97,8 @@ class NavigationActivity : AppCompatActivity() {
         checkSession()
     }
 
+    /** Detecting whether a session is currently active, and if so:
+     *  display a pop-up confirmation box to end the session.*/
     private fun checkSession() {
         val preferences = applicationContext.getSharedPreferences("com.example.app.STATE", Context.MODE_PRIVATE)
         if (preferences.getString("state", "") != "") {
@@ -95,10 +106,7 @@ class NavigationActivity : AppCompatActivity() {
             builder.setMessage("A climbing session is currently active, would you like to end the session?")
 
             builder.setPositiveButton("End session") { dialog, which ->
-                Toast.makeText(
-                    this.applicationContext,
-                    "Session ended", Toast.LENGTH_SHORT
-                ).show()
+                showMessage("Session ended")
                 val editor = preferences.edit()
                 editor.putString("state", "")
                 editor.apply()
@@ -108,5 +116,13 @@ class NavigationActivity : AppCompatActivity() {
             builder.create()
             builder.show()
         }
+    }
+
+    /** Helper function for displaying toast popups. */
+    private fun showMessage(message: String) {
+        Toast.makeText(
+            this, message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }

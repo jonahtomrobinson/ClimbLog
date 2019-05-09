@@ -10,9 +10,14 @@ import android.view.*
 import android.widget.Toast
 import kotlinx.android.synthetic.main.dialog_tries.view.*
 import kotlinx.android.synthetic.main.set_item.view.*
-import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.collections.ArrayList
+
+/**
+ * @desc Adapter class for set items. Handles assignment and formatting for the RecyclerView.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
 
 class SetAdapter(val items: ArrayList<Set>, val context: Context) : RecyclerView.Adapter<ViewHolder2>() {
 
@@ -35,7 +40,7 @@ class SetAdapter(val items: ArrayList<Set>, val context: Context) : RecyclerView
 
             /** On click of a set, open the set details page.*/
             holder.itemView.setOnClickListener {
-                val intent = Intent(this.context, setDetailsActivity::class.java).apply {
+                val intent = Intent(this.context, SetDetailsActivity::class.java).apply {
                     putExtra("setLocation", items[position].locationName)
                     putExtra("setDiff", items[position].difficulty)
                     putExtra("setId", items[position].id)
@@ -48,17 +53,18 @@ class SetAdapter(val items: ArrayList<Set>, val context: Context) : RecyclerView
             holder.tvType?.text = "Route"
             holder.tvIdentifier?.text = items[position].identifier
 
+            /** Grab the current session state. */
             val preferences =
                 context.applicationContext.getSharedPreferences("com.example.app.STATE", Context.MODE_PRIVATE)
             val state = preferences.getString("state", "")
 
             var catch = false
             val completedArray =
-                FileHelper.parseJSON(FileHelper.getCompletedFilePath(context), "completed") as ArrayList<Completed>
+                FileHelper.parseJSON("completed", FileHelper.getCompletedFilePath(context)) as ArrayList<Completed>
             for (completed in completedArray) {
 
                 /** If a completed entry is found for the item AND (either there is currently no session
-                 * OR the item has been completed this session). */
+                 * OR the item has been completed this session). THEN set the checkbox to TRUE */
                 if (completed.setId == items[position].id &&
                     (state == "" || LocalDateTime.parse(state).isBefore(LocalDateTime.parse(completed.date)))
                 ) {
@@ -77,6 +83,7 @@ class SetAdapter(val items: ArrayList<Set>, val context: Context) : RecyclerView
             }
 
             if (!catch) {
+                /** On checkbox button click, call the popup function for confirmation of attempts. */
                 holder.btnCompleted.setOnClickListener {
                     popup(holder, items[position])
                 }
@@ -84,11 +91,17 @@ class SetAdapter(val items: ArrayList<Set>, val context: Context) : RecyclerView
 
             /** On click of a set, open the set details page.*/
             holder.itemView.setOnClickListener {
-                val intent = Intent(this.context, routeDetailsActivity::class.java).apply {
+                val intent = Intent(this.context, RouteDetailsActivity::class.java).apply {
                     putExtra("setLocation", items[position].locationName)
                     putExtra("setDiff", items[position].difficulty)
                     putExtra("setId", items[position].id)
                     putExtra("setIdentifier", items[position].identifier)
+                    if(items[position].routes < 0){
+                        putExtra("isATrueRoute", false)
+                    }
+                    else{
+                        putExtra("isATrueRoute", true)
+                    }
                 }
                 context.startActivity(intent)
             }
@@ -100,7 +113,6 @@ class SetAdapter(val items: ArrayList<Set>, val context: Context) : RecyclerView
         if (ColorUtils.calculateLuminance(items[position].colour.toInt()) < 0.5 &&
             ColorUtils.calculateLuminance(items[position].colour.toInt()) != 0.0
         ) {
-
             holder.tvType?.setTextColor(Color.WHITE)
             holder.tvDifficulty?.setTextColor(Color.WHITE)
             holder.tvIdentifier?.setTextColor(Color.WHITE)
@@ -115,6 +127,7 @@ class SetAdapter(val items: ArrayList<Set>, val context: Context) : RecyclerView
         val mDialogView = inflator.inflate(R.layout.dialog_tries, null)
         builder.setView(mDialogView)
 
+        /** Formatting selected popup choice button (and other buttons) appropriately. */
         var triesValue = ""
         mDialogView.rb_1.setOnClickListener {
             wipePopupButtons(mDialogView)
@@ -151,9 +164,10 @@ class SetAdapter(val items: ArrayList<Set>, val context: Context) : RecyclerView
                 routeNum = set.identifier.toInt()
             }
 
+            /** Add new Completed entry to the JSONfile. */
             FileHelper.addData(
                 Completed(
-                    FileHelper.nextId(FileHelper.getCompletedFilePath(context), "completed"),
+                    FileHelper.nextId("completed", FileHelper.getCompletedFilePath(context)),
                     set.id,
                     routeNum,
                     LocalDateTime.now().toString(),
@@ -171,6 +185,7 @@ class SetAdapter(val items: ArrayList<Set>, val context: Context) : RecyclerView
 
     }
 
+    /** removes formatting on all popup choice buttons. */
     private fun wipePopupButtons(mDialogView: View) {
         mDialogView.rb_1.setBackgroundResource(R.color.colorWhite)
         mDialogView.rb_2.setBackgroundResource(R.color.colorWhite)

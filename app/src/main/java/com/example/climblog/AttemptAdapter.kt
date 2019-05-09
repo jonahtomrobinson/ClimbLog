@@ -1,24 +1,20 @@
 package com.example.climblog
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
-import android.graphics.Color
-import android.support.v4.graphics.ColorUtils
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.*
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_route_details.view.*
 import kotlinx.android.synthetic.main.attempt_item.view.*
-import kotlinx.android.synthetic.main.dialog_tries.view.*
-import kotlinx.android.synthetic.main.set_item.view.*
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 
-class AttemptAdapter(val items : ArrayList<Completed>, val context: Context) : RecyclerView.Adapter<ViewHolder3>() {
+/**
+ * @desc Adapter class for attempt items. Handles assignment and formatting for the RecyclerView.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
+
+class AttemptAdapter(val items: ArrayList<Completed>, val context: Context) : RecyclerView.Adapter<ViewHolder3>() {
 
     /** Gets the number of locations in the list.*/
     override fun getItemCount(): Int {
@@ -32,9 +28,9 @@ class AttemptAdapter(val items : ArrayList<Completed>, val context: Context) : R
 
     /** Binds each location in the ArrayList to a view.*/
     override fun onBindViewHolder(holder: ViewHolder3, position: Int) {
-            holder.tvNum?.text = (position+1).toString()
-            holder.tvDate?.text = LocalDateTime.parse( items[position].date).format(DateTimeFormatter.ISO_LOCAL_DATE)
-            holder.tvAttempts?.text = items[position].attempts
+        holder.tvNum?.text = (position + 1).toString()
+        holder.tvDate?.text = LocalDateTime.parse(items[position].date).format(DateTimeFormatter.ISO_LOCAL_DATE)
+        holder.tvAttempts?.text = items[position].attempts
     }
 }
 

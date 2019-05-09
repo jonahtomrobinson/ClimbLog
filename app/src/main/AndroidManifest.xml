@@ -12,12 +12,12 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:screenOrientation="portrait">
-        <activity android:name=".routeDetailsActivity"
+        <activity android:name=".RouteDetailsActivity"
                   android:parentActivityName=".LocationDetailsActivity"
                   android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".setDetailsActivity"
+                android:name=".SetDetailsActivity"
                 android:parentActivityName=".LocationDetailsActivity"
                 android:screenOrientation="portrait">
             <meta-data

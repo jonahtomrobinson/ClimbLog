@@ -12,6 +12,12 @@ import kotlinx.android.synthetic.main.fragment_indoor.*
 import kotlinx.android.synthetic.main.location_item.*
 import kotlin.collections.ArrayList
 
+/**
+ * @desc Fragment for the indoor view/page. Displays indoor climbing locations.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
+
 class IndoorFragment : Fragment() {
     companion object {
         fun newInstance(): IndoorFragment {
@@ -31,8 +37,8 @@ class IndoorFragment : Fragment() {
         locations.clear()
 
         /** Loads locations from the JSON Location file into the local locations ArrayList.*/
-        val locationArray = FileHelper.parseJSON(FileHelper.getLocationFilePath(context!!), "location")
-        if (!locationArray.isEmpty() && locationArray[0] is Location){
+        val locationArray = FileHelper.parseJSON("location", FileHelper.getLocationFilePath(context!!))
+        if (!locationArray.isEmpty() && locationArray[0] is Location) {
             addLocations(locationArray as ArrayList<Location>)
         }
 
@@ -63,11 +69,11 @@ class IndoorFragment : Fragment() {
     private fun addLocations(parsedData: ArrayList<Location>?) {
         if (parsedData != null) {
 
-            var sortedParsedData= parsedData.sortedWith(compareBy{it.name})
-            sortedParsedData = sortedParsedData.sortedWith(compareByDescending {it.favourite})
+            var sortedParsedData = parsedData.sortedWith(compareBy { it.name })
+            sortedParsedData = sortedParsedData.sortedWith(compareByDescending { it.favourite })
 
             for (location in sortedParsedData) {
-                if (location.inOrOut == "indoor"){
+                if (location.inOrOut == "indoor") {
                     locations.add(location)
                 }
             }

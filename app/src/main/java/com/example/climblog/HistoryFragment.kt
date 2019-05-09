@@ -6,6 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
+/**
+ * @desc Fragment for the history view/page. NOT CURRENTLY FUNCTIONAL.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
+
 class HistoryFragment : Fragment() {
 
     companion object {

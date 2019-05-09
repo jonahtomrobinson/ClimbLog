@@ -11,6 +11,11 @@ import kotlinx.android.synthetic.main.fragment_indoor.*
 import kotlinx.android.synthetic.main.fragment_indoor.rv_location_list
 import kotlinx.android.synthetic.main.fragment_outdoor.*
 
+/**
+ * @desc Fragment for the outdoor view/page. Displays outdoor climbing locations.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
 
 class OutdoorFragment : Fragment() {
 
@@ -32,8 +37,8 @@ class OutdoorFragment : Fragment() {
         locations.clear()
 
         /** Loads locations from the JSON Location file into the local locations ArrayList.*/
-        val locationArray = FileHelper.parseJSON(FileHelper.getLocationFilePath(context!!), "location")
-        if (!locationArray.isEmpty() && locationArray[0] is Location){
+        val locationArray = FileHelper.parseJSON("location", FileHelper.getLocationFilePath(context!!))
+        if (!locationArray.isEmpty() && locationArray[0] is Location) {
             addLocations(locationArray as ArrayList<Location>)
         }
 

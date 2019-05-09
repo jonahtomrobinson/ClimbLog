@@ -19,15 +19,22 @@ import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.activity_sign_up.*
 import java.lang.Exception
 
-const val EXTRA_SIGNUP_EMAIL = "com.example.climblog.SIGNUP_EMAIL"
-var fbAuth = FirebaseAuth.getInstance()
+/**
+ * @desc A signup page, allows creation on new users through firebase.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
 
 class SignUpActivity : AppCompatActivity() {
+
+    /** Grab firebase instance. */
+    private var fbAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
 
+        /** Set the custom actionbar title.*/
         setSupportActionBar(findViewById(R.id.my_toolbar))
         supportActionBar?.title = resources.getString(R.string.button_sign_up)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -40,51 +47,49 @@ class SignUpActivity : AppCompatActivity() {
         return true
     }
 
+    /** Action bar button listeners. */
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_done -> {
+
+            /** Grab signup details from text fields. */
             val email = signupEmail.text.toString()
             val password = signupPassword.text.toString()
             val name = signupFirstname.text.toString() + " " + signupLastname.text.toString()
 
+            /** Attempt to add the new users, informs of success and failure as appropriate. */
             if (email != "" && password != "") {
-                try {
+                fbAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task: Task<AuthResult> ->
+                        if (task.isSuccessful) {
 
-                    fbAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener { task: Task<AuthResult> ->
-                            if (task.isSuccessful) {
-                                //Registration OK
-                                val user = fbAuth.currentUser
-                                val profileUpdates = UserProfileChangeRequest.Builder()
-                                    .setDisplayName(name)
-                                    .build()
+                            //Registration OK
+                            val user = fbAuth.currentUser
+                            val profileUpdates = UserProfileChangeRequest.Builder()
+                                .setDisplayName(name)
+                                .build()
 
-                                user?.updateProfile(profileUpdates)
-                                    ?.addOnCompleteListener { task ->
-                                        if (task.isSuccessful) {
-                                            showMessage("Registration successful")
-
-                                            val intent = Intent(this, MainActivity::class.java).apply {
-                                                putExtra(EXTRA_SIGNUP_EMAIL, email)
-                                            }
-                                            startActivity(intent)
+                            /** Attempt to add user's name to firebase details. */
+                            user?.updateProfile(profileUpdates)
+                                ?.addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        showMessage("Registration successful")
+                                        val intent = Intent(this, MainActivity::class.java).apply {
+                                            putExtra("signupEmail", email)
                                         }
+                                        startActivity(intent)
+                                    } else {
+                                        showMessage("Registration unsuccessful")
                                     }
+                                }
 
-                            } else {
-                                //Registration error
-                                showMessage("Registration unsuccessful")
-                            }
+                        } else {
+                            //Registration error
+                            showMessage("Registration unsuccessful")
                         }
-                } catch (e: Exception) {
-                    showMessage("Registration unsuccessful")
-                }
-
-
+                    }
             }
-
             true
         }
-
         else -> {
             // If we got here, the user's action was not recognized.
             // Invoke the superclass to handle it.
@@ -92,6 +97,7 @@ class SignUpActivity : AppCompatActivity() {
         }
     }
 
+    /** Helper function for displaying toast popups. */
     private fun showMessage(message: String) {
         Toast.makeText(
             this, message,

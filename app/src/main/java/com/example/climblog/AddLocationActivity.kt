@@ -13,8 +13,13 @@ import kotlinx.android.synthetic.main.activity_add_location.*
 
 const val EXTRA_NAV_ARRAY = "come.example.climblog.NAV_ARRAY"
 
-class AddLocationActivity : AppCompatActivity() {
+/**
+ * @desc Form for adding new locations.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
 
+class AddLocationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +46,7 @@ class AddLocationActivity : AppCompatActivity() {
 
                 /** Using locationName grab the stored Locations JSON as an array.*/
                 val storedLocations =
-                    FileHelper.parseJSON(FileHelper.getLocationFilePath(this), "location") as ArrayList<Location>
+                    FileHelper.parseJSON("location", FileHelper.getLocationFilePath(this)) as ArrayList<Location>
 
                 /** Testing whether the name is duplicated.*/
                 var duplicateName = false
@@ -55,6 +60,8 @@ class AddLocationActivity : AppCompatActivity() {
                 if (duplicateName) {
                     Toast.makeText(this, "Duplicate location name entered.", Toast.LENGTH_LONG).show()
                 } else {
+
+                    /** Build message to pass to create new location function. */
                     val message = ArrayList<String>()
                     message.add("indoor")
                     message.add(locationName)
@@ -77,7 +84,6 @@ class AddLocationActivity : AppCompatActivity() {
                         putExtra(EXTRA_NAV_ARRAY, message)
                     }
                     startActivity(intent)
-                    //finish()
                 }
             }
             true
@@ -97,7 +103,7 @@ class AddLocationActivity : AppCompatActivity() {
             // Is the button now checked?
             val checked = view.isChecked
 
-            // Check which radio button was clicked
+            /** Check which radio button was clicked, and format appropriately. */
             when (view.getId()) {
                 R.id.radio_indoor ->
                     if (checked) {

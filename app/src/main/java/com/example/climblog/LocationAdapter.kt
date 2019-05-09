@@ -9,6 +9,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import kotlinx.android.synthetic.main.location_item.view.*
 
+/**
+ * @desc Adapter class for location items. Handles assignment and formatting for the RecyclerView.
+ * @author Jonah Robinson <jonahtomrobinson@gmail.com>
+ * @date 07/05/2019
+ */
+
 class LocationAdapter(val items : ArrayList<Location>, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
 
     /** Gets the number of locations in the list.*/
@@ -25,7 +31,7 @@ class LocationAdapter(val items : ArrayList<Location>, val context: Context) : R
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.tvLocationName?.text = items[position].name
         holder.tvLocationAddress?.text = items[position].address
-        holder.tvLocationLastVisited?.text = "Last Visited\n" + items[position].lastVisited
+        //holder.tvLocationLastVisited?.text = "Last Visited\n" + items[position].lastVisited
 
         /** Determine and correctly display favourite locations.*/
         if (items[position].favourite) {
@@ -57,7 +63,7 @@ class LocationAdapter(val items : ArrayList<Location>, val context: Context) : R
                 holder.tvLocationFavourite?.setImageResource(R.drawable.ic_star_filled)
                 items[position].favourite = true
             }
-            FileHelper.updateData(items[position].name,FileHelper.getLocationFilePath(context),"location", updateMap)
+            FileHelper.updateData(items[position].id,"location", updateMap, FileHelper.getLocationFilePath(context))
             updateMap.clear()
         }
 
@@ -68,6 +74,6 @@ class LocationAdapter(val items : ArrayList<Location>, val context: Context) : R
 class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
     val tvLocationName = view.tv_location_name
     val tvLocationAddress = view.tv_location_address
-    val tvLocationLastVisited = view.tv_location_last_visited
+    //val tvLocationLastVisited = view.tv_location_last_visited
     val tvLocationFavourite = view.tv_location_favourite
 }
